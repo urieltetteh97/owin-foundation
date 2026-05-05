@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Custom Properties ─────────────────────────────── */
+:root {
+  --color-primary:   #4A8C3F;
+  --color-accent:    #72C14B;
+  --color-olive:     #6B7C3A;
+  --color-dark:      #1E3A1A;
+  --color-sand:      #F2EDE4;
+  --color-clay:      #C4A882;
+  --font-display:    "Playfair Display", Georgia, serif;
+  --font-body:       "DM Sans", sans-serif;
+  --font-label:      "DM Mono", monospace;
+}
+
+/* ─── Base Resets ───────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    @apply text-neutral-800;
+  }
+
+  body {
+    font-family: var(--font-body);
+    @apply bg-earth-sand antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    @apply text-green-dark;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+
+  /* Remove default focus outline — replaced with custom below */
+  *:focus {
+    outline: none;
+  }
+
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-green-bright rounded-sm;
+  }
+}
+
+/* ─── Utility Layer ─────────────────────────────────────── */
+@layer utilities {
+  .section-pad {
+    @apply py-20 md:py-28;
+  }
+
+  .container-pad {
+    @apply px-5 sm:px-8 md:px-12;
+  }
+
+  .max-content {
+    @apply max-w-content mx-auto;
+  }
+
+  .label-text {
+    font-family: var(--font-label);
+    @apply text-xs uppercase tracking-widest text-green-olive;
+  }
+
+  /* Staggered animation helpers */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+
+  .animate-on-enter {
+    @apply opacity-0;
+  }
+}
