@@ -37,9 +37,9 @@ export default function Navbar() {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
           {/* Replace with <img src="/logo.svg" alt="OWIN Foundation" className="h-9" /> once logo is provided */}
-          <span className="font-display font-semibold text-light text-lg leading-none">
+          <span className="font-display font-semibold text-green-500 text-lg leading-none">
             OWIN<br />
-            <span className="text-light text-xs tracking-widest font-body font-medium">
+            <span className="text-green-500 text-xs tracking-widest font-body font-medium">
               FOUNDATION
             </span>
           </span>
@@ -54,7 +54,7 @@ export default function Navbar() {
           ))}
           <Link
             to="/donate"
-            className="bg-green-400 text-white label-text px-5 py-2 rounded-pill
+            className="bg-green-400 text-white label-text px-5 py-2 rounded
                        hover:bg-green-dark transition-colors shadow-cta"
           >
             Donate
