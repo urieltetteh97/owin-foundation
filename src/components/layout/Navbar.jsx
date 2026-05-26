@@ -27,7 +27,7 @@ export default function Navbar() {
     : "bg-transparent";
 
   const linkClass = ({ isActive }) =>
-    `label-text transition-colors font-bold hover:bg-green-dark hover:rounded px-3 py-2 ${
+    `label-text transition-colors font-bold hover:bg-white hover:rounded px-3 py-2 ${
       isActive ? "text-white" : "text-neutral-600"
     }`;
 
@@ -54,8 +54,8 @@ export default function Navbar() {
           ))}
           <Link
             to="/donate"
-            className="bg-green-400 text-white label-text px-5 py-2 rounded
-                       hover:bg-green-dark transition-colors shadow-cta"
+            className="bg-green-500  label-text px-5 py-2 rounded
+                       hover:bg-green-dark hover:text-white transition-colors shadow-cta"
           >
             Donate
           </Link>
