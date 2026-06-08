@@ -1,6 +1,8 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { SectionHeader, Card, GreenDivider } from "../components/ui";
-import { team, siteConfig } from "../data/siteData";
+import { team as defaultTeam, siteConfig } from "../data/siteData";
+import { api } from "../services/api";
 import DonateCTA from "../components/sections/DonateCTA";
 
 const fadeUp = (delay = 0) => ({
@@ -9,6 +11,26 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function About() {
+  const [team, setTeam] = useState(defaultTeam);
+  const [loadingTeam, setLoadingTeam] = useState(true);
+
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const response = await api.getTeam();
+        if (response.success && response.data) {
+          setTeam(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching team:", error);
+        // Falls back to default team
+      } finally {
+        setLoadingTeam(false);
+      }
+    };
+
+    fetchTeam();
+  }, []);
   return (
     <>
       {/* Page Hero */}
@@ -97,12 +119,20 @@ export default function About() {
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {team.map((member) => (
-              <Card key={member.name} className="p-6">
-                {/* Avatar placeholder — replace with <img> when photos available */}
-                <div className="w-16 h-16 rounded-full bg-green-light flex items-center
-                                justify-center mb-4 text-2xl font-display text-green-dark">
-                  {member.name.charAt(0)}
-                </div>
+              <Card key={member.name || member._id} className="p-6">
+                {/* Avatar with image or initials fallback */}
+                {member.imageUrl ? (
+                  <img
+                    src={member.imageUrl}
+                    alt={member.name}
+                    className="w-16 h-16 rounded-full object-cover mb-4"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-green-light flex items-center
+                                  justify-center mb-4 text-2xl font-display text-green-dark">
+                    {member.name.charAt(0)}
+                  </div>
+                )}
                 <p className="font-display text-green-dark text-lg">{member.name}</p>
                 <p className="label-text text-green-olive mt-0.5 mb-3">{member.role}</p>
                 {member.bio && (

@@ -2,19 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card } from "../components/ui";
 import { siteConfig } from "../data/siteData";
-
-// ── EmailJS Integration ────────────────────────────────────
-// 1. npm install @emailjs/browser
-// 2. Uncomment the import below
-// 3. Replace SERVICE_ID, TEMPLATE_ID, PUBLIC_KEY with your EmailJS values
-//
-// import emailjs from "@emailjs/browser";
-//
-// Then in handleSubmit replace the TODO comment with:
-// emailjs.send("SERVICE_ID", "TEMPLATE_ID", formData, "PUBLIC_KEY")
-//   .then(() => setStatus("success"))
-//   .catch(() => setStatus("error"));
-// ──────────────────────────────────────────────────────────
+import { api } from "../services/api";
 
 const contactInfo = [
   { icon: "✉️", label: "Email",    value: siteConfig.email },
@@ -27,6 +15,7 @@ export default function Contact() {
     name: "", email: "", subject: "", message: "",
   });
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) =>
     setFormData((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -34,11 +23,17 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("sending");
+    setErrorMessage("");
 
-    // TODO: wire up EmailJS here (see instructions above)
-    // Simulating async for now:
-    await new Promise((r) => setTimeout(r, 1000));
-    setStatus("success");
+    try {
+      await api.submitContact(formData);
+      setStatus("success");
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (error) {
+      console.error("Contact form error:", error);
+      setStatus("error");
+      setErrorMessage(error.message || "Failed to send message. Please try again.");
+    }
   };
 
   return (
@@ -88,6 +83,26 @@ export default function Contact() {
                     className="mt-6 label-text text-green-mid hover:text-green-dark text-xs"
                   >
                     Send another message →
+                  </button>
+                </motion.div>
+              ) : status === "error" ? (
+                <motion.div
+                  className="text-center py-12"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                >
+                  <div className="text-5xl mb-4">⚠️</div>
+                  <h3 className="font-display text-red-600 text-xl mb-2">
+                    Error Sending Message
+                  </h3>
+                  <p className="text-neutral-600 mb-4">
+                    {errorMessage}
+                  </p>
+                  <button
+                    onClick={() => { setStatus("idle"); setErrorMessage(""); }}
+                    className="mt-6 label-text text-green-mid hover:text-green-dark text-xs"
+                  >
+                    Try again →
                   </button>
                 </motion.div>
               ) : (

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card } from "../components/ui";
-import { activeCampaign } from "../data/siteData";
+import { activeCampaign as defaultCampaign } from "../data/siteData";
+import { api } from "../services/api";
 
 const donationAmounts = [10, 25, 50, 100, 250];
 
@@ -9,6 +10,36 @@ export default function Donate() {
   const [mode, setMode]     = useState("once");   // "once" | "monthly"
   const [amount, setAmount] = useState(50);
   const [custom, setCustom] = useState("");
+  const [activeCampaign, setActiveCampaign] = useState(defaultCampaign);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCampaign = async () => {
+      try {
+        const response = await api.getActiveCampaigns();
+        if (response.success && response.data && response.data.length > 0) {
+          const campaign = response.data[0];
+          setActiveCampaign({
+            active: true,
+            title: campaign.title,
+            body: campaign.description,
+            deadline: new Date(campaign.deadline).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric'
+            }),
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching campaign:", error);
+        // Falls back to default campaign
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCampaign();
+  }, []);
 
   const displayAmount = custom ? Number(custom) : amount;
 
